@@ -5,10 +5,18 @@ from dotenv import load_dotenv
 import os
 import json
 from typing import Any
+from math import isnan
 
 load_dotenv()
 STOCKS_API_KEY = os.environ.get('STOCKS_API_KEY')
 CURRENCY_API_KEY = os.environ.get('CURRENCY_API_KEY')
+
+
+def get_excel_to_list(operations_file: str) -> list:
+    path = os.path.join('..', 'data', operations_file)
+    operations = pd.read_excel(path)
+    operations_list = operations.to_dict(orient='records')
+    return operations_list
 
 
 def get_stock_prices(user_settings: str) -> list[dict[str, float]]:
@@ -68,28 +76,25 @@ def total_spent_splitting_by_cards(list_by_dates: list[dict[Any]]):
         total_spent = sum(dct['Сумма платежа'] for dct in list_by_dates
                           if dct['Сумма платежа'] < 0 and dct['Номер карты'] == card
                           and dct['Статус'] == 'OK')
+        total_cashback = sum(dct['Бонусы (включая кэшбэк)'] for dct in list_by_dates
+                             if dct['Сумма платежа'] < 0 and dct['Номер карты'] == card
+                             and dct['Статус'] == 'OK')
+
         if total_spent == 0:
             continue
         card_info = {'last_digits': str(card)[1:],
                      'total_spent': round(-total_spent, 2),
-                     'cashback': round(total_spent * (-cashback_rate), 2)}
+                     'cashback': round(total_spent * (-cashback_rate) + total_cashback, 2)}
         card_list.append(card_info)
     return card_list
 
 
-def get_list_starting_from_month(operations_file: str, date: str) -> list[dict[Any]]:
+def get_list_starting_from_month(operations_list: list, date: str) -> list[dict[Any]]:
     dt_form = datetime.strptime(date, "%d.%m.%Y %H:%M:%S")
     starting_date = dt_form.replace(day=1, hour=0, minute=0, second=0)
 
-    path = os.path.join('..', 'data', operations_file)
-    operations = pd.read_excel(path)
-    group = operations.groupby('Номер карты')
-    print(group.size())
-    operations_list = operations.to_dict(orient='records')
-
     list_by_dates = [dct for dct in operations_list if
                      starting_date <= datetime.strptime(str(dct["Дата операции"]), "%d.%m.%Y %H:%M:%S") <= dt_form]
-
     return list_by_dates
 
 
@@ -101,10 +106,23 @@ def top_transactions(list_by_dates):
                                       'amount': dct["Сумма платежа"],
                                       'category': dct["Категория"],
                                       'description': dct["Описание"]})
+
     return top_transactions_list
 
 
-lst = get_list_starting_from_month('operations.xls', '31.07.2020 23:53:50')
-print(lst)
-card = total_spent_splitting_by_cards(lst)
-print(card)
+def compile_to_json(excel_file_path, date, user_settings):
+    transactions_list = get_excel_to_list(excel_file_path)
+    time = greetings(date)
+    chosen_transactions = get_list_starting_from_month(transactions_list, date)
+    cards_info = total_spent_splitting_by_cards(chosen_transactions)
+    currencies = get_currency_rates(user_settings)
+    stocks = get_stock_prices(user_settings)
+    top_five = top_transactions(chosen_transactions)
+    return {'greeting': time,
+            'cards': cards_info,
+            'top transactions': top_five,
+            'currency_rates': currencies,
+            'stock_prices': stocks}
+
+
+print(compile_to_json('operations.xls', "19.03.2021 12:38:33", 'user_settings.json'))
