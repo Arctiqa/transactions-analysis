@@ -122,6 +122,17 @@ def top_transactions(list_by_dates: list[dict[Any, Any]]) -> list[dict[str, floa
 
 
 def compile_to_json(excel_file_path: str, date: str, user_settings: str) -> dict[Any, Any]:
+    """
+    Компилирует файл json из excel-файла с транзакциями по заданным параметрам даты и настроек пользователя
+    :param excel_file_path: название файла excel
+    :param date: дата и время, с которых происходит расчет
+    :param user_settings: параметры пользователя в json формате
+    :return: json файл в формате {'greeting': time,
+                                  'cards': cards_info,
+                                  'top transactions': top_five,
+                                  'currency_rates': currencies,
+                                  'stock_prices': stocks}
+    """
     transactions_list = get_excel_to_dicts_list(excel_file_path)
     time = greetings(date)
     chosen_transactions = get_list_starting_from_month(transactions_list, date)
@@ -135,7 +146,7 @@ def compile_to_json(excel_file_path: str, date: str, user_settings: str) -> dict
             'currency_rates': currencies,
             'stock_prices': stocks}
 
-    with open('user_information_set.json', 'w', encoding='utf-8') as f:
+    with open('../data/user_information_set.json', 'w', encoding='utf-8') as f:
         json.dump(info, f, indent=2, ensure_ascii=False)
     logger.info('json has been compiled')
     return info
