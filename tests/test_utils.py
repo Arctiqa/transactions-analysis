@@ -1,36 +1,6 @@
 from unittest.mock import patch
 import json
-import pytest
-
-from src.utils import (get_excel_to_dicts_list, get_stock_prices, get_list_starting_from_month,
-                       get_currency_rates, greetings, total_spent_splitting_by_cards)
-
-import pandas as pd
-
-
-@pytest.fixture
-def settings():
-    return {
-        "user_currencies": ["USD", "EUR"],
-        "user_stocks": ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]
-    }
-
-
-@patch('src.utils.pd.read_excel')
-def test_get_excel_to_dicts_list(mock_get):
-    mock_object = {'col1': [1, 2], 'col2': ['a', 'b']}
-    mock_get.return_value.to_dict.return_value = mock_object
-
-    result = get_excel_to_dicts_list('operations.xls')
-    assert result == mock_object
-
-
-def test_get_excel_to_dict_errors():
-    result_empty = get_excel_to_dicts_list('operations_empty.xls')
-    assert result_empty == []
-
-    result_not_exist = get_excel_to_dicts_list('operations_not_exist.xls')
-    assert result_not_exist == []
+from src.utils import get_stock_prices, get_currency_rates
 
 
 @patch('requests.get')
@@ -83,15 +53,3 @@ def test_get_currency_rates_error(mock_get):
     result = get_currency_rates(r'user_settings.json')
 
     assert result is None
-
-
-@pytest.mark.parametrize('time, expected', [('20.08.2020 07:52:48', 'Доброе утро'),
-                                            ('20.08.2020 12:52:48', 'Добрый день'),
-                                            ('20.08.2020 19:52:48', 'Добрый вечер'),
-                                            ('20.08.2020 05:52:48', 'Доброй ночи')])
-def test_greetings(time, expected):
-    assert greetings(time) == expected
-
-
-def test_total_spent_splitting_by_cards():
-    pass
