@@ -17,7 +17,7 @@ def cashback_profit(operations_list: str, year: int, month: int) -> str:
     :param month: заданный месяц
     :return: JSON файл по категориям кэшбэка
     """
-    path = os.path.join('..', 'data', operations_list)
+    path = f'{os.path.join(os.path.dirname(__file__), "..", "data", operations_list)}'
     try:
         operations = pd.read_excel(path)
         df = pd.DataFrame(operations)

@@ -5,7 +5,6 @@ from src.services import cashback_profit
 
 def test_cashback_profit():
     result = cashback_profit('operations.xls', 2021, 5)
-    print(result)
     expected = {
         "Отели": 294,
         "Супермаркеты": 176,
@@ -29,7 +28,7 @@ def test_cashback_profit():
         "Турагентства": 0,
         "Услуги банка": 0
     }
-    assert json.loads(result) == expected
+    assert result == json.dumps(expected, indent=2, ensure_ascii=False)
 
 
 def test_cashback_profit_errors():
