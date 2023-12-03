@@ -1,10 +1,11 @@
-from functools import wraps
-from typing import Optional, Callable
-import pandas as pd
-from datetime import datetime
 import logging
-from dateutil.relativedelta import relativedelta
 import os
+from datetime import datetime
+from functools import wraps
+from typing import Optional, Callable, Any
+
+import pandas as pd
+from dateutil.relativedelta import relativedelta
 
 logger = logging.getLogger(__name__)
 
@@ -16,9 +17,9 @@ def spending_result(file_name: str = 'result') -> Callable:
     :return: результат выполняемой функции
     """
 
-    def wrapper(func):
+    def wrapper(func: Callable) -> Callable:
         @wraps(func)
-        def inner(*args, **kwargs):
+        def inner(*args: Any, **kwargs: Optional[str]) -> Any:
             result = func(*args, **kwargs)
             path = f'{os.path.join(os.path.dirname(__file__), "..", "data", file_name)}.csv'
             result.to_csv(path, index=True)
@@ -30,7 +31,7 @@ def spending_result(file_name: str = 'result') -> Callable:
     return wrapper
 
 
-def gett_excel(operations_file):
+def gett_excel(operations_file: str) -> pd.DataFrame:
     path = f'{os.path.join(os.path.dirname(__file__), "..", "data", operations_file)}'
     transactions = pd.read_excel(path, index_col=0)
     return transactions

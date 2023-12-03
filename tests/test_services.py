@@ -1,5 +1,6 @@
-from src.services import cashback_profit
 import json
+
+from src.services import cashback_profit
 
 
 def test_cashback_profit():

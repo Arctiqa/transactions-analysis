@@ -1,10 +1,12 @@
-from src.utils import (get_currency_rates, get_stock_prices)
 import json
 import logging
 import os
 from datetime import datetime
 from typing import Any
+
 import pandas as pd
+
+from src.utils import (get_currency_rates, get_stock_prices)
 
 logger = logging.getLogger(__name__)
 

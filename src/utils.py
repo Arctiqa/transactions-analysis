@@ -1,8 +1,9 @@
-import requests
-from dotenv import load_dotenv
-import os
 import json
 import logging
+import os
+
+import requests
+from dotenv import load_dotenv
 
 load_dotenv()
 STOCKS_API_KEY = os.environ.get('STOCKS_API_KEY')

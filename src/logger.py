@@ -1,5 +1,5 @@
 import logging
-from logging import FileHandler, StreamHandler
+from logging import FileHandler
 from typing import Any
 
 
