@@ -1,8 +1,10 @@
-import pytest
-from src.views import (get_list_starting_from_month, top_transactions,
-                       greetings, total_spent_splitting_by_cards, get_excel_to_dicts_list)
-from unittest.mock import patch
 from math import nan
+from unittest.mock import patch
+
+import pytest
+
+from src.views import (get_excel_to_dicts_list, get_list_starting_from_month, greetings, top_transactions,
+                       total_spent_splitting_by_cards)
 
 
 @pytest.fixture

@@ -1,6 +1,7 @@
-from unittest.mock import patch
 import json
-from src.utils import get_stock_prices, get_currency_rates
+from unittest.mock import patch
+
+from src.utils import get_currency_rates, get_stock_prices
 
 
 @patch('requests.get')

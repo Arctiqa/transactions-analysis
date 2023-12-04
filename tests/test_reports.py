@@ -1,4 +1,4 @@
-from src.reports import spending_by_category, gett_excel
+from src.reports import gett_excel, spending_by_category
 
 
 def test_spending_by_category():

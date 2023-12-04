@@ -6,7 +6,7 @@ from typing import Any
 
 import pandas as pd
 
-from src.utils import (get_currency_rates, get_stock_prices)
+from src.utils import get_currency_rates, get_stock_prices
 
 logger = logging.getLogger(__name__)
 
