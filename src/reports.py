@@ -23,7 +23,7 @@ def spending_result(file_name: str = 'result') -> Callable:
             result = func(*args, **kwargs)
             path = f'{os.path.join(os.path.dirname(__file__), "..", "data", file_name)}.csv'
             result.to_csv(path, index=True)
-            logger.info(f'Result written to file - {file_name}')
+            logger.info(f'Result written to file - {file_name}.csv')
             return result
 
         return inner

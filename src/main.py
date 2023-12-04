@@ -4,7 +4,7 @@ from src.views import compile_to_json
 logger = setup_logging()
 
 
-def main():
+def main() -> None:
     file_path = 'operations.xls'
     user_settings = 'user_settings.json'
     # 13.08.2021 20:15:00
